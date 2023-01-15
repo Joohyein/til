@@ -1,66 +1,21 @@
-# 6일차
+# WIL
 
-토이 프로젝트에 issue를 추가하고 해결해보는 시간을 가졌다. 시간이 부족해서 넣지 못했던 기능과 버그를 수정하는 issue를 추가해보았다. issue가 많았지만 그 중에서 내가 해결한 issue는 쉬운 것들이었다.
+### 첫 토이프로젝트
 
-- 이슈 목록
-    - input창 비우기 : 문제를 틀렸을 때 input안에 있는 문자들을 지우기
-    - 문제 풀기 오답기능 업데이트 : 틀렸을 때 alert창을 띄웠는데 input창 오른쪽 끝에 '오답입니다'를 띄웠다.
+웹개발종합반 강의를 토대로 토이프로젝트를 진행했다. 팀프로젝트가 처음이어서 어떻게 시작을 해야할지 어떤걸 먼저 해야할지 감이 오지 않았지만 팀원들과 각자 소개하고 관심분야를 얘기하면서 자연스럽게 주제를 정했다. 4명 모두 재미있게 흥미를 보이고 해보고 싶었던 캐치마인드를 구현해보기로 했다. 
 
-sourcetree에서 pull을 했을 때 오류가 떠서 풀을 하지 못했다.   
+API명세서를  작성하면서 전체적인 구상을 했는데 변수이름을 미리 정해놓았던 게 도움이 되었다. API명세서 항목은 page, name, url, method(FE, BE)으로 작성했다. 명세서를 작성하면서 백엔드와 프로트엔드가 데이터를 주고 받는 방식을 정리하는 시간을 가졌다. API명세서를 보면서 코딩을 시작 했는데 머릿속에 정리가 된 상태로 하는 기분이었다. 
 
-    <오류코드>
-    * branch main -> FETCH_HEAD hint: You have divergent branches and need to specify how to reconcile them. hint: You can do so by running one of the following commands sometime before hint: your next pull: hint: hint: git config pull.rebase false # merge hint: git config pull.rebase true # rebase hint: git config pull.ff only # fast-forward only hint: hint: You can replace "git config" with "git config --global" to set a default hint: preference for all repositories. You can also pass --rebase, --no-rebase, hint: or --ff-only on the command line to override the configured default per hint: invocation. fatal: Need to specify how to reconcile divergent branches.
+깃에 대해 공부를 하고 로컬 저장소와 원격 저장소를 클론해주고 각자 브랜치를 만들어서 맡은 파트를 코딩했다. 소스트리를 처음 사용해봐서 많이 헤맸다. merge conlict가 생겼는데 화면공유를 해서 팀원 모두가 충돌을 해결하는 과정에 참여했다. 충돌이 나더라도 해결하는 방법이 중요하다는 것을 알게 되었고 두려워하지 말고 부딪혀 보면서 문제를 해결했던 것이 좋은 경험이었다.
 
+프로젝트가 마무리 되어갈 때 이슈를 작성해보면서 코드를 추가하고 수정해줬다. 나중에 봤을 때 어떤 이슈를 누가 어떤식으로 구현했는지 이슈 목록에서 확일할 수 있었다.  프로젝트 기간이 끝나고 팀원 모두가 시간이 부족해서 구현하지 못했던 것들과 버그를 이슈에 등록하고 각자 해결하고 싶은 이슈를 맡아서 수정하고 푸시를 해줬다. 점점 완성도 있게 변하는 웹페이지를 보며 뿌듯했다. 
 
-#### 해결
-기본 mode 같은 경우, git pull 을 수행하게 되면 git merge commit 을 생성하게 됩니다. 따라서, 기존에 존재하지 않는 commit 이 자동으로 생기게 된다. pull 을 받을 때 마다 불필요한 merge commit 이 생기게 되는 것이다.
-
-1. git config pull.rebase false #merge (the default strategy)
-2. git config pull.rebase true #rebase
-3. git config pull.ff only # fast-forward only   
-- true : rebase 활성화
-
-- 2 -> git pull 의 default 옵션으로 지정되어 옵션이 주어져 실행됩니다.
-
-- 3 -> git pull --ff-only 를 기본 정책으로 가져갈 경우 매번 입력해야되는 번거로움이 존재한다. 또한, 만약 실수로 빼먹고 작업을 하게되면 history 가 꼬이는 상황이 발생할 수 있기 때문에 기본설정이 필요한 경우가 있습니다.
+***    
 
 
-### 알게 된 점
-rebase는 원본을 바꾸는 행동 중 하나이다. 기존의 로그를 덮어씌워서 히스토리가 사라짐. 방법론을 잘 지키면 rebase를 사용할 일이 없다. config 설정을 바꿔주는 명령어이다. rebase를 true가 default이다. 
+토이프로젝트를 시작하고 처음에는 막막하기만 했었는데 서로 소통하며 진행되어가는 과정을 보면서 팀원들끼리의 소통이 중요하다는 것을 알게되었다. 문제가 생겼을 때 해결할 수 있는 사람이 맡아서 진행하는 것보다 다같이 화면을 보면서 의견을 나누면서 해결했던 것이 너무 좋았다. 전체적인 흐름도 알게 되고 몰랐던 정보들을 많이 얻어가는 시간이었다. 기술적인 부분을 포함해서 팀원들이 소통하면서 함께 헤쳐나가는 것이 정말 좋았다. 
 
-
-*** 
-
-
-### 오늘 알게 된 css 
-
-    - 애니매이션 유지하기
-    animation-fill-mode: forwards;
-
-    - '오답입니다' 텍스트가 답을 여러 번 입력했을 때 reload가 되는 것을 보여주기 위해 0% ~ 5%까지 텍스트의 크기의 변화를 줬다.
-    @keyframes fadeout {
-        0% {
-            opacity: 1;
-            font-size: 20px;
-        }
-        5% {
-            font-size: 16px;
-        }
-        95% {
-            opacity: 1;
-        }
-        100% {
-            opacity: 0;
-        }
-    }
-
-
-    
-
-
-
-
-    
+첫 팀프로젝트에서 너무 좋은 팀원들을 만나서 좋은 기억으로 남을 것 같다. 팀원 모두가 하고싶은 것들이 많았는데 망설이지 않고 의견을 말하면서 마지막까지 기능을 추가하고 수정했다. 모두 헤어지기 아쉬워서 그랬던 것 같기도 하다. 팀회고를 하면서 프로젝트에 대한 것과 프로젝트를 하면서 가졌던 생각들을 말해보는 시간을 가졌는데  그 시간이 가장 좋았다. 제대로 끝맺음을 하는 느낌이었고 나중에 돌아봤을 때 팀회고를 했던 시간이 많이 생각날 것 같다.
 
 
 
