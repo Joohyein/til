@@ -1,128 +1,65 @@
-## sort()
-
-- 숫자 기준
-
-```jsx
-const a = [100, 3, 20];
-a.sort((a, b) => a - b);
-// [3, 20, 100]
-```
-
-`sort()` 함수 안에 있는 람다 함수(익명 함수)는 a, b 중에 더 큰 값을 식별하기 위한 함수이다.
-
-- 음수가 리턴된다면 `a < b` 를 의미
-- 양수가 리턴된다면 `a > b` 를 의미
-- 0이 리턴된다면 `a == b` 를 의미한다.
-
-정렬을 위해 두 값을 비교하는 기준을 정의하여 `sort()` 함수의 매개변수로 넘겨주는 것이다.
-
-- 숫자와 문자열을 함께 sort()
-
-```jsx
-let sortedArray = array.sort((a, b) => {
-  if(a < b) return -1;
-  if(a > b) return 1;
-  if(a === b) return 0;
-  else return -1;
-})
-```
-
-else일 경우는 문자열과 숫자를 비교할 때이다.
-
----
-
-## 객체를 배열로 변환하는 방법
-
-- for in
+- 문자열 뒤집기 - split(), reverse(), join()
+    - split() : 문자열을 부분 문자열로 구분해 문자열 객체를 여러 개의 문자열로 이루어진 배열로 분할한다.
+    - reverse() : 배열을 반전한다.
+    - join() : 배열의 모든 요소를 문자열로 결합한다.
     
     ```jsx
-    let objstr = {
-        a : 'a string',
-        b : 'b string',
-        c : 'c string'
-    };
-    
-    let arr = [];
-    
-    for(let objkey in objstr){
-        if(objstr.hasOwnProperty(objkey)){
-    			arr.push(objkey);
-    		}
+    function reverse(str) {
+    	let splitStr = str.split(""); // ["h", "e", "l", "l", "o"]
+    	let reverseArr = splitStr.reverse(); // ["o", "l", "l", "e", "h"]
+    	let joinArr = reverseArr.join(""); // "olleh"
+    	return joinArr;
     }
-    console.log(arr); // ['a', 'b', 'c']
+    reverse("hello");
     ```
     
-- Object.keys()함수
-    
-    객체에서 key를 문자열 배열로 반환한다.
-    
-     
+    한 줄에 작성 가능
     
     ```jsx
-    let objstr = {
-        a : 'a string',
-        b : 'b string',
-        c : 'c string'
-    };
-    
-    let arr = Object.keys(objstr);
-    
-    console.log(arr); // ['a', 'b', 'c']
+    function reverse(str) {
+    	return str.split("").reverse().join("");
+    }
+    reverse("hello");
     ```
     
-    Object.keys()함수와 map()함수를 결합하여 객체의 값을 배열로 변환할 수 있다.
+- concat()
+    
+    두 개의 문자열을 하나의 문자열로 만들어준다. 입력값을 문자열 대신 배열을 사용하여 두 개의 배열을 하나의 배열로 만들어줄 수도 있다. **기존 배열을 변경하지 않으며 추가된 새로운 배열을 반환한다.**
     
     ```jsx
-    let objstr = {
-        a : 'a string',
-        b : 'b string',
-        c : 'c string'
-    };
+    let str1 = "hello";
+    let str2 = "world";
+    console.log(str1.concat(str2));
+    // "hello world"
     
-    let arr = Object.keys(objstr).map(item => objstr[item]);
-    
-    console.log(arr); // ['a string', 'b string', 'c string']
+    let arr1 = new Array("1", "2");
+    let arr2 = new Array("3", "4");
+    console.log(arr1.concat(arr2));
+    // ["1", "2", "3", "4"]
     ```
     
-- Object.values()함수
+- Number.isInteger()
     
-    객체에서 값을 문자열 배열로 반환한다.
+    인수의 값이 정수인지 아닌지를 반환해준다. 전달된 값이 정수이면 `true` 를 반환하고 정수가 아니라면 `false` 를 반환한다. (String, true, NaN, Infinity와 같은 값도 false를 반환)
     
     ```jsx
-    let objstr = {
-        a : 'a string',
-        b : 'b string',
-        c : 'c string'
-    };
-    
-    let arr = Object.values(objstr);
-    
-    console.log(arr); // ['a string', 'b string', 'c string']
+    Number.isInteger(0); // true;
+    Number.isInteger(-10); // true;
+    Number.isInteger(0.1); // false
     ```
     
-- Object.entries() 함수
-    
-    객체에서 [key, value]형식의 값을 배열로 반환한다.
+- 배열값 초기화하는 방법
+    - fill()
     
     ```jsx
-    let objstr = {
-        a : 'a string',
-        b : 'b string',
-        c : 'c string'
-    };
-    
-    let arr = Object.entries(objstr);
-    
-    console.log(arr); // [['a','a string'], ['b','b string'], ['c','c string']]
+    let arr = [1,2,5,10,30];
+    console.log(arr.fill(0)); // [0,0,0,0,0]
     ```
     
-
----
-
-## 귤 모으기
-
-- forEach 사용
-
-`tangerine.forEach((el) => (tangMap[el] = (tangMap[el] || 0) + 1));`
-
-이해하고 넘어가기
+    - 일정 길이의 배열을 0으로 초기화하기
+    
+    ```jsx
+    arr = function(len) {
+    	return new Array(len).fill(0);
+    }
+    ```
