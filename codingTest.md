@@ -1,66 +1,41 @@
-**charCodeAt, fromCharCode**
-
-- charCodeAt : 문자열을 아스키코드로 변환
-    
-    ```jsx
-    // 예제
-    let str = 'abc'
-    // c를 아스키코드로 변환
-    let ascii = str.charCodeAt(2); // 99
-    ```
-    
-- fromCahrCode : 아스키코드를 문자열로 변환
-    
-    ```jsx
-    let ascii = 99;
-    let str = String.fromCharCode(ascii); // 'c'
-    ```
-    
-
-**Array.from**
+- splice - **배열에서 특정 값 삭제, 추가**
 
 ```jsx
-let arr = ['1', '2', '3', '4', '5'];
-answer = Array.from(arr, (v) => Number(v));
-```
-
-- 숫자를 문자열로 바꾸기
-    
-    ```jsx
-    let num = 123;
-    let str = '' + num;
-    ```
-    
-
-**최빈값 구하기**
-
-```jsx
-function solution(array) {
-    let a = array.filter((num, index) => array.indexOf(num) == index); 
-    if(a.length === 1) return array[0];
-    let arr = {};
-
-    for(let i = 0; i < array.length; i++){
-        if(arr[array[i]]) arr[array[i]]++;
-        else arr[array[i]] = 1;
-    }
-    
-    let tmp = [];
-    for(let value in arr){
-        tmp.push([value, arr[value]]);
-    }
-    
-    tmp.sort(function(a, b) {
-        return b[1] - a[1];
-    });
-    
-    if(tmp[0][1] === tmp[1][1]) return -1;
-    return +tmp[0][0];
-}
+arr.splice(1, 2, optional)
 ```
 
 ```jsx
-let a = array.filter((num, index) => array.indexOf(num) == index); 
+let arr = [1, 2, 3, 4];
+arr.splice(1, 2);
+return arr; // [1, 4]
 ```
 
-배열에 같은 값만 여러 개 있을 때 런타임 에러가 생겨서 filter함수를 사용해서 길이가 1이면 배열 안의 값을 리턴하도록 최상단에 넣어주었다.
+```jsx
+// 삭제하고 원하는 값 추가
+let arr = [1, 2, 3, 4];
+arr.splice(1, 2, 100, 200);
+return arr; // [1, 100, 200, 4]
+```
+
+```jsx
+// 삭제 없이 원하는 값 추가
+let arr = [1, 2, 3, 4];
+arr.splice(1, 0, 100, 200);
+return arr; // [1, 100, 200, 2, 3, 4]
+```
+
+- slice - **배열 얕은 복사본을 새로운 배열 객체로 반환. 원본 배열은 바뀌지 않는다.**
+
+```jsx
+let arr = [1, 2, 3, 4];
+return arr.slice(1, 2);  // [2]
+```
+
+- 배열을 원하는 길이, 원하는 값으로 초기화
+
+```jsx
+const arr = Array.from({length: 5}, () => 0);
+```
+
+- n.toString(3) : n을 3진수로 변환
+- parseInt(’0021’, 3) : 문자열 ‘0021’을 3진수로 변환
