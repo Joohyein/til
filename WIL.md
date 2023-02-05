@@ -1,148 +1,413 @@
-## ES(ECMA Script)
+## 콜백함수
 
-자바스크립트의 표준, 규격을 나타내는 용어이다. ES5는 2009년 출시, ES6은 2015년에 출시되었다. 
+- 콜백함수의 특징
+    - 다른 함수(A)의 인자로 콜백함수(B)를 전달하면, A가 B의 제어권을 갖게 된다.
+    - 특별한 요청(bind)이 없는 한 A에 미리 정해놓은 방식에 따라 B를 호출한다.
+    - 미리 정해놓은 방식이란 어떤 시점에 콜백을 호출할지, 인자에는 어떤 값들을 지정할지, this에 무엇을 바인딩할지 등이다.
+    - 콜백으로 넘기는 것은 메서드가 아니라 함수이다.
 
-**ES5**
+---
 
-배열에 forEach, map, filter, reduce, some, every와 같은 메소드들이 지원되었다. 
+## HTTP
 
-**ES6에 추가된 기능**
+- 평문 통신이기 때문에 도청이 가능하다.
 
-- let, const
-    
-    ES6 이전 var키워드는 함수 레벨 스코프를 가지며 암묵적 재할당이 가능하였다. 단점을 보완하기 위해 블록 레벨 스코프를 가지며 재할당이 가능한 let, const키워드가 추가되었다.
-    
-- Arrow function
-    
-    ```jsx
-    // ES5
-    function func(a, b){
-    	return a + b;
+**TCP/IP** 구조의 통신은 전부 통신 경로 상에서 엿볼 수 있다. 패킷을 수집하는 것만으로 도청할 수 있다. 평문으로 통신을 할 경우 메세지의 의미를 파악할 수 있기 때문에 암호화하여 통신해야 한다.
+
+**보완**
+
+1. 통신 자체를 암호화 -  `SSL(Secure Socket Layer)` 또는 `TLS(Transport Layer Security)` 라는 다른 프로토콜을 조합함으로써 HTTP의 통신 내용을 암호화할 수 있다. SSL을 조합한 HTTP를 `HTTPS(HTTP Secure)` 또는 `HTTP over SSL` 이라고 부른다.
+2. 콘텐트를 암호화 - HTTP메세지에 포함되는 콘텐츠만 암호화하는 것이다. 암호화해서 전송하면 받은 측에서는 그 암호를 해독하여 출력하는 처리가 필요하다.
+
+- 통신 상대를 확인하지 않기 때문에 위장이 가능하다.
+
+HTTP에 의한 통신에는 상대가 누구인지 확인하는 처리는 없기 때문에 누구든지 요청을 보낼 수 있다. IP주소나 포트 등에서 그 웹 서버에 액세스 제한이 없는 경우 요청이 오면 상대가 누구든지 무언가의 리스폰스를 반환한다. 
+
+1. 요청을 보낸 곳의 웹 서버가 원래 의도한 리스폰스를 보내야 하는 웹 서버인지 알 수 없다.
+2. 리스폰스를 반환한 곳의 클라이언트가 원래 의도한 리퀘스트를 보낸 클라이언트인지 알 수 없다.
+3. 통신하고 있는 상대가 접근이 허가된 상대인지 알 수 없다.
+4. 어디에서 누가 요청을 보냈는지 알 수 없다.
+5. 의미없는 요청도 수신한다.(DDoS 공격을 방지할 수 없다)
+
+**보완**
+
+ `SSL` 은 상대를 확인하는 수단으로 **증명서**를 제공하고 있다. 증명서는 신뢰할 수 있는 제 3자 기관에 의해 발행되는 것이기 때문에 서버나 클라이언트가 실재하는 사실을 증명한다. 이 증명서를 이용함으로써 통신 상대가 내가 통신하고자 하는 서버임을 알 수 있고 이용자는 개인 정보 누설 등의 위험성이 줄어들게 된다. 클라이언트는 이 증명서로 본인 확인을 하고 웹 사이트 인증에서도 이용할 수 있다.
+
+- 완전성을 증명할 수 없기 때문에 변조가 가능하다.
+
+여기서 완전성이란 정보의 정확성을 의미한다. 서버 또는 클라이언트에서 수신한 내용이 송신측에서 보낸 내용과 일치한다라는 것을 보장할 수 없는 것이다. 요청이나 리스폰스가 발신된 후에 상대가 수신하는 사이에 누군가에 의해 변조되더라도 이 사실을 알 수 없다. 공격자가 도중에 요청이나 리스폰스를 빼앗아 변조하는 공격을 중간자 공격(Man-in-the-Middle)이라고 부른다.
+
+**보완**
+
+`MD5` , `SHA-1` 등의 해시값을 확인하는 방법과 파일의 디지털 서명을 확인하는 방법이 존재하지만 확실히 확인할 수 있는 것은 아니다. 확실히 방지하기에는 `HTTPS` 를 사용해야 한다. SSL에는 인증이나 암호화, 그리고 다이제스트 기능을 제공하고 있다.
+
+## HTTPS
+
+HTTPS는 SSL의 껍질을 덮어쓴 HTTP라고 할 수 있다. 즉, 새로운 애플리케이션 계층의 프로토콜이 아니라는 것이다. HTTP 통신하는 소켓 부분을 `SSL` 또는 `TLS` 라는 프로토콜로 대체하는 것 뿐이다. HTTP는 TCP와 직접 통신했지만, HTTPS에서 HTTP는 SSL과 통신하고 SSL이 TCP와 통신하게 된다. SSL을 사용한 HTTPS는 암호화와 증명서, 안정성 보호를 이용할 수 있게 된다.
+
+HTTPS의 SSL에서는 공통키 암호화 방식과 공개키 암호화 방식을 혼합한 하이브리드 암호 시스템을 사용한다. 공통키를 공개키 암호화 방식으로 교환한 다음에 다음부터의 통신은 공통키 암호를 사용하는 방식이다.
+
+---
+
+### Styling
+
+1. App.js
+
+```jsx
+import React, {useState} from "react";
+import "App.css";
+
+export default function App() {
+  const arr = ['오이', '당근', '피망', '가지', '메론'];
+  return (
+    <div className="content">
+      
+      {
+        arr.filter((item)=>{
+          return item !== '피망';
+        }).map((item)=>{
+          return <div className="box">{item}</div>;
+        })
+      }
+    </div>
+  );
+}
+```
+
+1. App.css
+
+```css
+
+.content{
+  padding:20px;
+  display: flex;
+  gap:12px;
+}
+
+.box {
+  width: 100px;
+  height:100px;
+  border: solid 1px yellowgreen;
+  border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+```
+
+---
+
+### 반복되는 컴포넌트 처리하기
+
+- 객체
+
+```css
+
+import React, {useState} from "react";
+import "App.css";
+
+export default function App() {
+  const obj = [
+    {id:1, age:21, name:'짱구'}, 
+    {id:2, age:23, name:'훈이'}, 
+    {id:3, age:22, name:'철수'},
+    {id:4, age:20, name:'유리'}, 
+    {id:5, age:22, name:'맹구'}];
+  return (
+    <div className="content">     
+      {
+        obj.map((item)=>{
+          return <div key={item.id} className="box">{item.age}, {item.name}</div>
+        })
+      }
+    </div>
+  );
+}
+```
+
+map함수를 사용할 때는 key가 반드시 있어야 한다.
+
+- 값을 추가하고 삭제하면 렌더링이 되어야 하니까 state로 작성해야 한다.
+
+```css
+import React, {useState} from "react";
+import "App.css";
+
+export default function App() {
+  const [obj, setObj] = useState([
+    {id:1, age:21, name:'짱구'}, 
+    {id:2, age:23, name:'훈이'}, 
+    {id:3, age:22, name:'철수'},
+    {id:4, age:20, name:'유리'}, 
+    {id:5, age:22, name:'맹구'}
+	]);
+  return (
+    <div className="content">     
+      {
+        obj.map((item)=>{
+          return <div key={item.id} className="box">{item.name}, {item.age}</div>
+        })
+      }
+    </div>
+  );
+}
+```
+
+- 삭제기능
+
+각 item마다 기능이 들어가야 한다.
+
+```jsx
+import React, {useState} from "react";
+import "App.css";
+
+export default function App() {
+  const [obj, setObj] = useState([
+    {id:1, age:21, name:'짱구'}, 
+    {id:2, age:23, name:'훈이'}, 
+    {id:3, age:22, name:'철수'},
+    {id:4, age:20, name:'유리'}, 
+    {id:5, age:22, name:'맹구'}
+	]);
+
+  const [name, setName] = useState('');
+  const [age, setAge] = useState('');
+
+  const nameChangeHandler = (event) => {
+    setName(event.target.value);
+  }
+  const ageChangeHandler = (event) => {
+    setAge(event.target.value);
+  }
+  const btnClickHandler = () => {
+    const info = {
+      id: obj.length + 1,
+      age,
+      name,
     }
+    setObj([...obj, info])
+    // 불변성유지
+  }
+  
+  return (
+    <div>
+      <div>
+        이름 :&nbsp;<input 
+        value={name}
+        onChange={nameChangeHandler} 
+        /><br />
+        나이 : <input 
+        value={age}
+        onChange={ageChangeHandler}
+        /><br />
+        <button
+        onClick={btnClickHandler}
+        >button</button>
+      </div>
+      <div className="content">     
+        {
+          obj.map((item)=>{
+            return (<Obj item={item} obj={obj} setObj={setObj} />); // props로 필요한 것들을 내려주기
+          })
+        }
+      </div>
+    </div>
     
-    // ES6
-    const func = (a, b) => a + b;
-    ```
-    
-    가독성 및 유지 보수성이 좋아졌다. 화살표 함수는 lexical this를 따르기 때문에 기존 함수와 this 바인딩이 다르다.
-    
+  );
+};
+// 컴포넌트 분리
+const Obj = (item, obj, setObj) => {
+  const clickremovebtnhandler = (id) => {
+    const newObj = obj.filter((item)=> item.id !== id);
+    setObj(newObj);
+  }
+  <div className="box">
+    {item.age}, {item.name}
+    <button onClick={()=>clickremovebtnhandler(item.id)}> x </button>
+  </div>
+};
+```
 
-- Default parameter
-    
-    ES6 이전에는 함수의 매개변수에 초기값을 주기 위해서 함수 내부에서 로직이 필요했다. 
-    
-    ```jsx
-    // ES5
-    var tmp = function(a, b){
-    	var a = a || 100;
-    	var b = b || 200;
-    	return a + b;
-    
-    // ES6
-    const tmp = function(a = 100, b = 200) {
-    	return a + b;
-    }
-    ```
-    
+- 컴포넌트 분리하기
+1. 삭제버튼 분리
 
-- Template literal
-    
-    ```jsx
-    // ES5
-    var firstname = 'hyein'
-    var lastname = 'Joo'
-    var name = 'My name is ' + lastname + firstname + '.'
-    // My name is Joohyein.
-    
-    // ES6
-    const name = `My name is ${lastname}${firstname}.`
-    // My name is Joohyein.
-    ```
-    
+```jsx
+import React, {useState} from "react";
+import "App.css";
 
-- Multi-line string
-    
-    ES6이전에는 줄바꿈을 하기 위해서 ‘\n’과 덧셈 연산자를 사용했는데 백틱을 사용하여 줄바꿈을 할 수 있다.
-    
-    ```jsx
-    // ES5
-    var str = 'My name is hyein. \n' +
-    'hello' + 'hahaha'
-    
-    // ES6
-    const str = `My name is hyein.
-    hello hahaha`
-    ```
-    
+export default function App() {
+  const [obj, setObj] = useState([
+    {id:1, age:21, name:'짱구'}, 
+    {id:2, age:23, name:'훈이'}, 
+    {id:3, age:22, name:'철수'},
+    {id:4, age:20, name:'유리'}, 
+    {id:5, age:22, name:'맹구'}
+	]);
 
-- class
-    
-    객체 생성 방식 중 하나이다.
-    
-- module
-    
-    재사용하기 위한 코드 조각을 뜻하며, 세부사항은 캡슐화시키고 API부분만 외부에 노출시킨 코드이다.
-    
-    ```jsx
-    <script type="module" src="app.mjs"></script>
-    // type에 module을 추가하고 파일 확장자를 mjs로 변경
-    ```
-    
-    모듈은 모듈 스코프를 가지며 export, import키워드로 사용한다.
-    
+  const [name, setName] = useState('');
+  const [age, setAge] = useState('');
 
-- destructuring
+  const nameChangeHandler = (event) => {
+    setName(event.target.value);
+  }
+  const ageChangeHandler = (event) => {
+    setAge(event.target.value);
+  }
+  const btnClickHandler = () => {
+    const info = {
+      id: (obj.length + 1),
+      age,
+      name,
+    };
+    setObj([...obj, info]);
+    // 불변성유지
+  };
+  const clickremovebtnhandler = (id) => {
+    const newObj = obj.filter((item)=> item.id !== id);
+    setObj(newObj);
+  }
+  
+  return (
+    <div>
+      <div>
+        이름 :&nbsp;<input 
+        value={name}
+        onChange={nameChangeHandler} 
+        /><br />
+        나이 : <input 
+        value={age}
+        onChange={ageChangeHandler}
+        /><br />
+        <button
+        onClick={btnClickHandler}
+        >button</button>
+      </div>
+      <div className="content">     
+        {
+          obj.map((item)=>{
+            return (
+              <div>
+                <Obj 
+                  key={item.id}
+                  item={item}
+                  clickremovebtnhandler={clickremovebtnhandler}
+                />
+               </div>
+          )})
+        }
+      </div>
+    </div>
     
-    ```jsx
-    // ES5
-    var arr = [1, 2, 3]
+  );
+};
+// 컴포넌트 분리
+const Obj = ({item, clickremovebtnhandler}) => {
+  return(
+    <div className="box">
+      {item.age}, {item.name}
+      <button onClick={()=>clickremovebtnhandler(item.id)}> x </button>
+    </div>
+  )
+};
+```
+
+1. 추가버튼 분리
+
+```jsx
+import React, {useState} from "react";
+import "App.css";
+
+export default function App() {
+  const [obj, setObj] = useState([
+    {id:1, age:21, name:'짱구'}, 
+    {id:2, age:23, name:'훈이'}, 
+    {id:3, age:22, name:'철수'},
+    {id:4, age:20, name:'유리'}, 
+    {id:5, age:22, name:'맹구'}
+	]);
+
+  const [name, setName] = useState('');
+  const [age, setAge] = useState('');
+
+  const nameChangeHandler = (event) => {
+    setName(event.target.value);
+  }
+  const ageChangeHandler = (event) => {
+    setAge(event.target.value);
+  }
+  const btnClickHandler = () => {
+    const info = {
+      id: (obj.length + 1),
+      age,
+      name,
+    };
+    setObj([...obj, info]);
+    // 불변성유지
+  };
+  const clickremovebtnhandler = (id) => {
+    const newObj = obj.filter((item)=> item.id !== id);
+    setObj(newObj);
+  }
+  
+  return (
+    <div>
+      <div>
+        이름 :&nbsp;<input 
+        value={name}
+        onChange={nameChangeHandler} 
+        /><br />
+        나이 : <input 
+        value={age}
+        onChange={ageChangeHandler}
+        /><br />
+        <Addbtn btnClickHandler={btnClickHandler}> add </Addbtn>
+      </div>
+      <div className="content">     
+        {
+          obj.map((item)=>{
+            return (
+              <div>
+                <Obj 
+                  key={item.id}
+                  item={item}
+                  clickremovebtnhandler={clickremovebtnhandler}
+                />
+               </div>
+          )})
+        }
+      </div>
+    </div>
     
-    var a = arr[0]
-    var b = arr[1]
-    var c = arr[2]
-    
-    console.log(a, b, c);  // 1 2 3
-    ```
-    
-    ```jsx
-    // ES6
-    const arr = [1, 2, 3];
-    const [a, b, c] = arr;
-    console.log(a, b, c);  // 1 2 3
-    ```
-    
+  );
+};
+// 컴포넌트 분리
+const Addbtn = ({btnClickHandler, children}) => {
+  return (
+    <button onClick={btnClickHandler}> {children} </button>
+  );
+};
+const Obj = ({item, clickremovebtnhandler}) => {
+  return(
+    <div className="box">
+      {item.age}, {item.name}
+      <button onClick={()=>clickremovebtnhandler(item.id)}> x </button>
+    </div>
+  )
+};
+```
 
-## this
+→ 분리한 컴포넌트는 파일을 만들어서 분리하자. (import, export)
 
-상황에 따라 그때 그때 달라질 뭔가를 가리키기 위해서 사용한다. 프로퍼티가 메서드가 자기를 참조할 수 있게 인스턴스 생성 이후에 해당 인스턴스를 가리키기 위해서 사용한다. 자바스크립트에서 this는 실행 컨텍스트가 생성될 때 함께 결정된다. 실행 컨텍스트는 함수를 호출할 때 생성되므로, this는 함수를 호출할 때 결정된다고 할 수 있다. 그래서 어떤 방식으로 호출하냐에 따라 값이 달라진다고 한다.
+```jsx
+import Obj from "component/Obj";
+import Button from "component/Button";
+```
 
-`this`키워드는 지금 동작하고 있는 코드를 가지고 있는 객체를 가리킨다. this 는 객체 멤버의 컨텍스트가 바뀌는 경우에도 언제나 정확한 값을 사용하게 해준다. ex) 두 개의 다른 `person`객체가 각각 다른 이름으로 인스턴스로 생성된 상태에서 인사말을 출력하기 위해 객체의 name을 참조해야 하는 경우
+---
 
-- 전역 공간에서의 this
-    
-    전역 공간에서의 this는 전역 객체를 가리킨다. 브라우저에서는 window, node.js에서는 global이라는 객체이다. 개념상 전역 컨텍스트를 실행하는 주체가 전역객체이기 때문이다. 자바스크립트가 실행되는 환경, 즉 런타임에 따라서 전역객체의 정보가 달라진다.
-    
-    자바스크립트의 모든 변수는 실은 특정 객체의 프로퍼티로서 동작한다. 사용자가 var 연산자를 이용해서 변수를 선언하더라도 실제 자바스크립트 엔진은 어떤 특정 객체의 프로퍼티로 인식하는 것이다. 특정 객체란 바로 실행 컨텍스트의 LexicalEnvironment이다. 실행 컨텍스트는 변수를 수집해서 L.E의 프로퍼티로 저장한다.
-    
-    전역변수를 선언하면 자바스크립트 엔진은 이를 전역객체의 프로퍼티로 할당한다.
-    
-    var로 선언한 전역변수와 전역객체의 프로퍼티는 호이스팅 여부 및 configurable(변경 및 삭제 가능성)여부에서 차이를 보인다.
-    
+`&nbsp;` : 띄어쓰기
 
-## 동기, 비동기
 
-**async와 await**
-
-promise를 좀 더 편하게 사용할 수 있는 문법이다.
-
-- async
-
-function 앞에 `async` 를 붙이면 해당 함수는 항상 프라미스를 반환한다. 프라미스가 아닌 값을 반환하더라도 이행 상태의 프라미스(resolved promise)로 값을 감싸 이행된 프라미스가 반환되도록 한다.
-
-- await
-
-자바스크립트는 `await` 키워드를 만나면 프라미스가 처리될 때까지 기다린다. 결과는 그 이후 반환된다.
-
-프라미스가 처리되길 기다리는 동안엔 엔진이 다른 일(다른 스크립트를 실행, 이벤트 처리 등)을 할 수 있기 때문에, CPU 리소스가 낭비되지 않는다.
-
-`await` 는 `promise.then` 보다 좀 더 세련되게 프라미스의 `result` 값을 얻을 수 있도록 해주는 문법이다. 가독성도 좋고 쓰기도 쉽다.
+---
+**Reference**
+https://github.com/JaeYeopHan/Interview_Question_for_Beginner/tree/master/Network
