@@ -70,3 +70,9 @@ styles.js
 SubmitButton.jsx → 모달 컴포넌트에서 사용되는 버튼 컴포넌트
 
 CloseButton.jsx → 모달 컴포넌트에서 사용되는 버튼 컴포넌트
+
+
+---   
+**Reference**
+
+[동기와 비동기, 그리고 블럭과 넌블럭](https://musma.github.io/2019/04/17/blocking-and-synchronous.html)
