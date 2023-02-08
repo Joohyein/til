@@ -1,78 +1,109 @@
-# 동기와 비동기, 블럭과 넌블럭
+## onKeyPress 이벤트 핸들링
 
-## blocking / non-blocking
+input창에 입력을 하고 Enter를 눌렀을 때 함수가 실행되게 할 수 있.
 
-- 호출된 함수가 자신이 할 일을 모두 마칠 때까지 제어권을 계속 가지고서 호출한 함수에게 바로 돌려주지 않으면 **block**
-- 호출된 함수가 자신이 할 일을 마치지 않았더라도 바로 제어권을 건내주어(return) 호출한 함수가 다른 일을 진행할 수 있도록 해주면 **non-block**
+```jsx
+const onKeyPress = e => {
+  if (e.key === 'Enter') {
+    btnClickAddHandler();  // todo박스가 추가되는 함수
+  }
+};
+```
 
-## synchronous / asynchronous
+```jsx
+<label for="content">
+	내용 
+	<input 
+		type="text" 
+		id="content" 
+		value={content} 
+		onChange={contentChangeHandler} 
+		onKeyPress={onKeyPress} 
+	/>
+</label>
+```
 
-- 호출된 함수의 수행 결과 및 종료를 호출한 함수가 신경쓰면 **synchronous**
-- 호출된 함수의 수행 결과 및 종료를 호출된 함수 혼자 직접 신경쓰고 처리한다면 **asynchronous**
+## useRef
 
- - blocking & synchronous : 호출한 함수가 호출된 함수의 업무 결과에만 신경쓰느라 제 할일도 못하고 제어권도 호출된 함수에게 있음
+**DOM 요소에 접근할 수 있도록 하는 React Hook이다.**
 
- - blocking & aynchronous : 호출한 함수는 호출된 함수의 업무에 관심도 없고 제어권도 없는데 붙잡혀 있음
+- 아이디 입력창에 10자리가 입력되는 순간 비밀번호 입력창으로 focus 이동시키기
 
- - non-blocking & synchronous : 호출된 함수가 호출한 함수에게 제어권을 바로 건네주어(return) 호출한 함수가 다른 업무를 볼수 있었음(non-blocked)에도 불구하고 여전히 호출된 함수의 업무 결과에만 신경쓰느라 제 할일을 못하게 될 수 있다.
+```jsx
+import React from 'react'
+import { useRef, useEffect, useState } from 'react'
 
- - non-blocking & asynchronous : 호출된 함수가 제어권을 바로 건네주고 호출한 함수는 다른 업무를 볼 수 있다. 호출된 함수의 업무 결과에 신경쓰지 않는다.
+function App() {
+  const idRef = useRef('');
+  const pwRef = useRef('');
+  const [id, setId] = useState(''); 
 
----
+  const idChangeHandler = (e) => {
+    setId(e.target.value);
+  }
 
-## SPA
+  useEffect(()=> {
+    idRef.current.focus();
+  }, []);
+  useEffect(()=>{
+    if(id.length >= 10){
+      pwRef.current.focus();
+    }
+  }, [id]);
+  return (
+    <div>
+      <div>
+        아이디 : <input type="text" value={id} onChange={idChangeHandler} ref={idRef}/>
+      </div>
+      <div>
+        비밀번호 : <input type="password" ref={pwRef} />
+      </div>
+    </div>
+  )
+}
 
-SPA는 클라이언트가 서버에 최초로 요청을 하게 되면 HTML, CSS, JS등 사이트에 필요한 모든 소스를 가져오고 다음 요청에는 AJAX를 이용해 변경에 필요한 부분만 가져오는 방식이다.
+export default App
+```
 
-**SPA의 문제점**
+- useEffect
 
-- 필요한 모든 정적 리소스를 한 번에 다운로드하기 때문에 초기 구동 속도가 느리다.
-- SEO(search engine optimization)문제가 있다. SPA는 클라이언트 렌더링 방식이기 때문에 처음에 받은 웹페이지의 소스코드가 거의 비어있어 검색이 잘 안될 수 있다.
+렌더링 될 때, 특정한 작업을 수행해야할 때 설정하는 훅이다. (ex. console, alert.. ) 어떤 컴포넌트가 화면에 나타나거나 사라질때 실행하고싶다면 사용한다.
 
-**SSR 방식을 사용해서 SEO문제를 해결**
-
-- SSR은 크롤링에 더 친화적인 방식이다.
-- SSR의 대표적인 프레임워크 : React의 Next.js, Vue의 Nuxt, Angular의 Universal
-- 동적 렌더링(Dynamic Rendering) : 사이트가 이미 SPA의 CSR방식으로 구현되어있거나, SSR을 사용하지 못한다면, 동적 렌더링을 통해 SEO할 수 있다. 동적 렌더링은 서버에서 요청하는 자가 사람인지 크롤러인지 판단하여 사람에게는 HTML, JS등을 제공하고 크롤러에게는 사전에 렌더링된 HTML 버전의 페이지를 보여주는 방식이다. 즉, 크롤러는 서버에서 이미 렌더링된 HTML버전의 소스를 손쉽게 읽을 수 있게 된다. 동적 렌더링을 하는 방법은 react-helmet, prerender-spa-plugin, prerender.io, poppeteer, rendertron등이 있다. (아직 완전히 이해하지 못함)
-- History API : SPA방식의 웹사이트에서 주소가 바뀌지 않는 문제를 해결하기 위해 싱글페이지이지만 주소를 부여하는 기능의 API이다. 과거에는 SPA환경에서 `#` 또는 `#!` 를 통해 주소를 구분했지만 현재에는 History API와 pushState() 방법을 통해 정적인 URL과 같은 주소를 설정할 수 있게 되었다. SEO 관점에서 이는 크롤링 뿐만 아니라 백링크를 얻기 용이하게 되었다고 볼 수 있다.
-
-사이트의 규모가 크고 방대한 양의 콘텐츠를 담고 있다면 MPA방식으로 구성하는 것이 SEO뿐만 아니라 페이지 속도 측면에서도 더 유리하다고 볼 수 있다. 블로그 형태의 사이트나 에버그린 콘텐츠를 담는 사이트 등 콘텐츠를 계속 빌드업하려는 사이트의 경우 모두 해당된다. 사이트의 규모가 작고 콘텐츠의 양이 적고 화려하면서 부드러운 이미지 구현이 필요하다면 SPA가 적합할 수 있다. 
-
-**SPA와 MPA를 섞은 하이브리드 방식**
-
-SPA로 페이지 구현이 효과적인 페이지만 일부 SPA로 제한하고 검색에 노출이 되어야하는 페이지는 MPA로 제작하는 방법도 있다. 
-
----
-
-## React naming
-
-- 보통 디렉토리 파일명은 소문자로 한다.
-- CamelCase로 작명한다.
-
-컴포넌트 이름은 대문자로 시작해야한다.
-
-컴포넌트를 포함하는 파일명은 대문자로 시작(파일명으로 구분하기 쉽게 하기 위해)
-
-폴더는 소문자로 시작하는 카멜케이스, 컴포넌트를 만드는 파일은 대문자로 시작하는 카멜케이스
-
-components/ 
-
-common/ 
-
-Modal/ 
-
-(index.jsx)
-
-Modal.jsx
-
-styles.js
-
-SubmitButton.jsx → 모달 컴포넌트에서 사용되는 버튼 컴포넌트
-
-CloseButton.jsx → 모달 컴포넌트에서 사용되는 버튼 컴포넌트
-
-
----   
-**Reference**
-
-[동기와 비동기, 그리고 블럭과 넌블럭](https://musma.github.io/2019/04/17/blocking-and-synchronous.html)
+위 예제에서는 useRef를 사용했을 때 리렌더링이 되어야 화면에 보이기 때문에 useEffect를 함께 사용해줬다.
+1. input에 값을 입력
+2. state가 변경
+3. state가 바뀌었기 때문에 App 컴포넌트가 리렌더링된다.
+4. 리렌더링 → useEffect() 실행
+    - 의존성 배열
+    
+    이 배열에 값을 넣으면, 그 값이 바뀔 때만 useEffect를 실행한다. 
+    
+    ```jsx
+    // useEffect에 빈 배열 추가해보기
+    useEffect(()=>{
+      console.log("혜인최고");
+    }, []);
+    ```
+    
+    의존성 배열을 아무것도 입력을 안해도 동작을 한다. 어떤 값이 변하던 간에 의존성 배열에는 값이 없기 때문에 어떤 state가 변해도 화면이 처음 로딩될 때만 동작한다(console.log()).
+    
+    ```jsx
+    useEffect(() => {
+    	console.log(`hello ${value}`);
+    }, [value]);
+    ```
+    
+    value값이 바뀔때 console.log가 찍힌다.
+    
+    → 콘솔창에 값이 두 개가 찍히는데 index.js에서 <React.StrictMode> 때문이다. 주석처리하면 한 번만 출력된다.
+    
+    화면에서 없어졌을 때 동작하는 useEffect
+    
+    ```jsx
+    useEffect(()=>{
+      console.log("혜인최고");
+    	return () => {
+    		console.log('빠이')
+    	};
+    }, []);
+    ```
