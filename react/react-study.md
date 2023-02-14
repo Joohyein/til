@@ -1,58 +1,168 @@
-### useEffect
+## Styled components
 
-상세페이지에 들어갔을 때 새로고침을 해야 화면에 보여지는 문제가 생겼다.
-
-**에러 메세지(일부)**
-
-<aside>
-💡 It looks like you wrote useEffect(async () => ...) or returned a Promise. Instead, write the async function inside your effect and call it immediately:
-
-</aside>
-
-useEffect()에서 getMovie()를 리턴해줘서 오류가 났던 것이었다.
-
-```jsx
-const getMovies = async() => {
-  const json = await (await fetch("https://yts.mx/api/v2/list_movies.json?minimum_rating=9&sort_by=year")).json();
-  setMovies(json.data.movies);
-  setLoading(false);
-}
-```
-
-```jsx
-// 잘못 쓴 코드
-useEffect(() => getMovie(), []);
-```
-
-→ 이렇게 코드를 작성했을 때 unmount가 되었을 때 실행해준다. 
-
-```jsx
-useEffect(() => {
-    getMovie();
-}, []);
-```
-
-```jsx
-function Hello() {
-  useEffect(()=>{
-    console.log("hi")
-    return () => console.log("bye")
-  },[]);
-  return <h1>hello</h1>
-}
-```
-
----
-
-- 새로고침 시에도 리덕스 내의 데이터를 유지하는 방법
+- 2.2 Adapthing and Extending
     
-    리액트는 기본적으로 SPA라서 페이지를 새로고침하면 값이 휘발된다. 따라서 처리를 해줘야 하는데, 서버에 모든 자료를 저장하게 되면 보안적으로도, 자원적으로도 손해다. 따라서 스토리지를 통해서 해결할 수 있다. 
+    css를 재사용하는 방법 → props로 다른 부분만 바꿔준다
     
-    - 로컬 스토리지
-        - 브라우저가 닫혔다가 열려도, OS가 재부팅 되어도 값이 유지가 된다.
-    - 세션 스토리지
-        - 새로고침에서는 값이 휘발되지 않지만 브라우저를 닫거나 OS를 재부팅하고 탭을 닫는 행위로도 스토리지가 날라간다.
-
-- useRef
-    - 값이 변해도 리렌더링을 할 필요가 없는 데이터를 useRef로 관리할 수 있다.
-    - ref의 기본 기능처럼 DOM을 직접 조작해야만 할 때(스크롤을 옮기거나 포커스를 줄 때)사용된다.
+    ```jsx
+    import styled from "styled-components";
+    
+    function App() {
+      return (
+       <Father>
+        <Box bgColor="green">
+          <Text>Hyein zzang</Text>
+        </Box>
+        <Box bgColor="yellowgreen"></Box>
+       </Father>
+      );
+    }
+    
+    export default App;
+    
+    const Father = styled.div`
+      display: flex;
+    `;
+    const Box = styled.div`
+      background-color: ${(props) => props.bgColor};
+      width:100px;
+      height:100px;
+    `
+    
+    const Text = styled.span`
+      color: white;
+    `
+    ```
+    
+    - 컴포넌트 확장하기
+    
+    ```jsx
+    import styled from "styled-components";
+    
+    function App() {
+      return (
+       <Father>
+        <Circle bgColor="green"></Circle>
+        <Box bgColor="yellowgreen"></Box>
+       </Father>
+      );
+    }
+    
+    export default App;
+    
+    const Father = styled.div`
+      display: flex;
+    `;
+    const Box = styled.div`
+      background-color: ${(props) => props.bgColor};
+      width:100px;
+      height:100px;
+    `
+    const Circle = styled(Box)`
+      border-radius: 50px;
+    `
+    // Box의 모든 속을 가져오고 거기에 Circle을 추가
+    ```
+    
+- 2.3 ‘As’ and Attrs
+    
+    여러 개의 컴포넌트를 다룰 때 도움이 될 만한 몇 가지 트릭
+    
+    ```jsx
+    <Btn as="a" href="/"></Btn>
+    ```
+    
+    이 prop은 button styled component인 Btn을 사용할 건데 HTML부분을 바꿔서 a를 전달했다.
+    
+    - styled components가 컴포넌트를 생성할 때, 속성값을 설정할 수 있게 해준다.
+    
+    ```jsx
+    import styled from "styled-components";
+    
+    function App() {
+      return (
+       <Father as="header">
+          <Input />
+          <Input />
+          <Input />
+          <Input />
+          <Input />
+          <Input />
+       </Father>
+      );
+    }
+    
+    export default App;
+    
+    const Father = styled.div`
+      display: flex;
+    `;
+    const Input = styled.input.attrs({required:true, minLength:10})`
+      background-color: yellow;
+    `
+    ```
+    
+    attrs에는 input으로 전달된 모든 속성을 가진 오브젝트를 담을 수 있다.
+    
+    input이 여러 개 있을 때 같은 속성을 주고싶을 때 사용한다.
+    
+- Animations and Pseudo Selectors
+    - keyframe
+    
+    ```jsx
+    const rotateAnimation = keyframes`
+      0% {
+        transform:ratate(0deg);
+        border-radius: 0px;
+      }
+      50% {
+        border-radius: 100px;
+      }
+      100% {
+        transform:rotate(360deg);
+        border-radius: 0px;
+      }
+    `;
+    
+    const Box = styled.div`
+      height: 100px;
+      width:100px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: green;
+      animation: ${rotateAnimation} 3s linear infinite;
+    `
+    ```
+    
+    - 컴포넌트 안에 있는 <span> 태그에 style주기
+    
+    꼭 모든 component에 styled component 처리를 해 줄 필요 없다.
+    
+    ```jsx
+    const Box = styled.div`
+    	width:100px;
+    	height:100px;
+    	span {
+    		font-size:36px;
+    	}
+    `
+    ```
+    
+    - Pseudo Selectors
+    
+    선택한 요소의 특수한 상태를 지정
+    
+    ```jsx
+    const Box = styled.div`
+    	span {
+      font-size: 36px;
+      &:hover {
+        font-size: 40px;
+      }
+      &:active {
+        opacity: 0;
+      }
+    }
+    `
+    ```
