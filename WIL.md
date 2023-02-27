@@ -179,3 +179,26 @@ hyein@juhyein-ui-noteubug nyangdang % git pull upstream dev
 untracked 파일들이어서 먼저 add 후 stash를 했고 git stash —all는 untracked 파일까지 모두 stash해주는 명령어이다.
 
 stash 기능은 **git add 로 특정 파일을 수정해서 staging area에 올려놓은 버전을 큐 와 비슷한 방식으로 돌아가는 자료구조에 백업해놓는다.**
+
+   
+   ## react image upload
+
+input type=’file’
+
+```jsx
+<input 
+	type='file'
+	accept='image/jpg,image/png, image/gif'
+	name='img'
+	onChange={onChange}
+/>
+	
+```
+
+`accept` : 업로드할 수 있는 파일 확장자
+
+---
+
+reference
+
+[https://inpa.tistory.com/entry/AXIOS-📚-설치-사용](https://inpa.tistory.com/entry/AXIOS-%F0%9F%93%9A-%EC%84%A4%EC%B9%98-%EC%82%AC%EC%9A%A9)
